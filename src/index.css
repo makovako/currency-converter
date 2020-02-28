@@ -1,10 +1,12 @@
 :root {
-  --bg-color: #b0f4e6;
+  --bg-color: #E1F5FE;
   --text-color: #0d0221;
-  --form-bg-color: #b0f4d6;
-  --form-border-color: #0b5f73;
-  --form-shadow-color: #b0f4d9;
-  --form-shadow: 10px 10px 25px 10px var(--form-shadow-color);
+  /* --form-bg-color: linear-gradient(0deg, #B3E5FC, #81D4FA 94.35%); */
+  --form-bg-color: #B3E5FC;
+  --form-border-color: #01579B;
+  --form-shadow-color: #B3E5FC;
+  --form-shadow: 5px 5px 15px 10px var(--form-shadow-color);
+  --form-shadow-2: -5px -5px 15px 10px var(--form-shadow-color);
   --red: #fa4659;
   --green:#00BD56;
 }
@@ -35,8 +37,9 @@ code {
 }
 
 form {
-  border: 2px solid var(--form-border-color);
+  /* border: 2px solid var(--form-border-color); */
   box-shadow: var(--form-shadow);
+  box-shadow: var(--form-shadow-2);
   background: var(--form-bg-color);
   padding: 0.5rem;
   border-radius: 5% 5%;

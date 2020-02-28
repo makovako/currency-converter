@@ -19,7 +19,7 @@ export const Converter = ({ setResult, loading, setLoading }) => {
     } else {        
       setResult(0);
     }
-  }, [destCurrency, srcCurrency, amount, rates]);
+  }, [error, amount, rates]);
 
   /**
    * Get all available currencies on component mount
@@ -34,6 +34,7 @@ export const Converter = ({ setResult, loading, setLoading }) => {
       setDestCurrency("USD");
     };
     fetchData();
+    // 
   }, []);
 
   /**
@@ -107,7 +108,7 @@ export const Converter = ({ setResult, loading, setLoading }) => {
         <datalist id="currencies">
             {
                 allCurrencies.map(curr => (
-                    <option value={curr} />
+                    <option key={curr} value={curr} />
                 ))
             }
         </datalist>
