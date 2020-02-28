@@ -29,12 +29,11 @@ export const Converter = ({ setResult, loading, setLoading }) => {
       setLoading(true);
       const res = await axios.get(BASE_URL);
       setAllCurrencies([res.data.base, ...Object.keys(res.data.rates)]);
-      setLoading(false);
       setSrcCurrency("EUR");
       setDestCurrency("USD");
+      setTimeout(() => setLoading(false),500)
     };
     fetchData();
-    // 
   }, []);
 
   /**
@@ -46,7 +45,7 @@ export const Converter = ({ setResult, loading, setLoading }) => {
     const fetchCurrency = async curr => {
       setLoading(true);
       const res = await axios.get(`${BASE_URL}?base=${curr}`);
-      setLoading(false);
+      setTimeout(() => setLoading(false),500)
       setRates(res.data.rates);
     };
 

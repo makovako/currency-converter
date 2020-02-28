@@ -1,9 +1,9 @@
-import React from 'react'
+import React from "react";
 
 export const Loading = () => {
-    return (
-        <span>
-            Loading data ...
-        </span>
-    )
-}
+  return (
+    <div className="loading">
+      <p>Loading data ...</p>
+    </div>
+  );
+};
