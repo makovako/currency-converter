@@ -1,6 +1,6 @@
-# Expense tracker
+# Currency converter
 
-This is a expense tracker web app build using react framework
+This is a currency converter web app build using react.
 
 ## Scripts
 
