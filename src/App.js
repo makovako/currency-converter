@@ -12,13 +12,13 @@ function App() {
   return (
     <div className="App">
       <Header />
-      {loading && <Loading />}
       <Converter
         setResult={setResult}
         loading={loading}
         setLoading={setLoading}
       />
       <Result result={result} />
+      {loading && <Loading />}
     </div>
   );
 }

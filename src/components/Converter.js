@@ -17,9 +17,9 @@ export const Converter = ({ setResult, loading, setLoading }) => {
     if (error.every(x => !x) && !isNaN(amount) && rates) {
       setResult(currencyToString(amount * rates[destCurrency], destCurrency));
     } else {        
-      setResult("");
+      setResult(0);
     }
-  }, [destCurrency, srcCurrency, amount]);
+  }, [destCurrency, srcCurrency, amount, rates]);
 
   /**
    * Get all available currencies on component mount

@@ -1,20 +1,21 @@
 export const currencyToString = (amount, currency) => {
+    const finAmount = amount.toFixed(2)
     switch (currency) {
         case "EUR":
-            return `${amount} €`
+            return `${finAmount} €`
         case "USD":
-            return `$ ${amount}`
+            return `$${finAmount}`
         case "GBP":
-            return `£ ${amount}`
+            return `£${finAmount}`
         case "CZK":
             if (amount === 1) {
-                return `${amount} koruna`
+                return `${finAmount} koruna`
             } else if (amount === 2 || amount === 3 || amount === 4) {
-                return `${amount} koruny`
+                return `${finAmount} koruny`
             } else {
-                return `${amount} korun`
+                return `${finAmount} korun`
             }
         default:
-            return `${amount} ${currency}`
+            return `${finAmount} ${currency}`
     }
 }
