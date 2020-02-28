@@ -15,6 +15,6 @@ export const currencyToString = (amount, currency) => {
                 return `${amount} korun`
             }
         default:
-            return `${amount}`
+            return `${amount} ${currency}`
     }
 }

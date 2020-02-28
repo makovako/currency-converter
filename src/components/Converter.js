@@ -1,51 +1,81 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { currencyToString } from "../utils/helpers";
 
-import {currencyToString} from "../utils/helpers";
+const BASE_URL = "https://api.exchangeratesapi.io/latest";
 
-export const Converter = ({ setResult }) => {
-  const [srcCurrency, setSrcCurrency] = useState("EUR");
-  const [destCurrency, setDestCurrency] = useState("USD");
+export const Converter = ({ setResult, loading, setLoading }) => {
+  const [srcCurrency, setSrcCurrency] = useState("");
+  const [destCurrency, setDestCurrency] = useState("");
   const [amount, setAmount] = useState(0);
   const [error, setError] = useState([false, false]);
-
-  const onSubmit = e => {
-    e.preventDefault();
-    setResult(currencyToString(amount * 2, destCurrency));
-  };
+  const [allCurrencies, setAllCurrencies] = useState([]);
+  const [rates, setRates] = useState(null);
 
   useEffect(() => {
-    setResult(currencyToString(amount * 2, destCurrency));
-    // TODO if both currencies and number are valid autoupdate 
-  })
+    // if there is no error in input and we have rates, convert
+    if (error.every(x => !x) && !isNaN(amount) && rates) {
+      setResult(currencyToString(amount * rates[destCurrency], destCurrency));
+    } else {        
+      setResult("");
+    }
+  }, [destCurrency, srcCurrency, amount]);
 
+  /**
+   * Get all available currencies on component mount
+   */
   useEffect(() => {
-    const curr = ["EUR", "USD", "CZK", "GBP"].filter(
-      curr => curr === srcCurrency
-    );
+    const fetchData = async () => {
+      setLoading(true);
+      const res = await axios.get(BASE_URL);
+      setAllCurrencies([res.data.base, ...Object.keys(res.data.rates)]);
+      setLoading(false);
+      setSrcCurrency("EUR");
+      setDestCurrency("USD");
+    };
+    fetchData();
+  }, []);
+
+  /**
+   * On source currency change
+   * Update rates if currency is valid
+   * Update color if currency is correct
+   */
+  useEffect(() => {
+    const fetchCurrency = async curr => {
+      setLoading(true);
+      const res = await axios.get(`${BASE_URL}?base=${curr}`);
+      setLoading(false);
+      setRates(res.data.rates);
+    };
+
+    const curr = allCurrencies.filter(curr => curr === srcCurrency);
     if (curr.length === 1) {
-        // SRC CURRENCY is OK
+      // SRC CURRENCY is OK
       setError(prev => [false, ...prev.slice(1, 2)]);
+      // Fetch new rates for currency
+      fetchCurrency(curr);
     } else {
       setError(prev => [true, ...prev.slice(1, 2)]);
     }
-    
   }, [srcCurrency]);
 
+  /**
+   * On destination currency change
+   * Update color if currency is correct
+   */
   useEffect(() => {
-    const curr = ["EUR", "USD", "CZK", "GBP"].filter(
-      curr => curr === destCurrency
-    );
+    const curr = allCurrencies.filter(curr => curr === destCurrency);
     if (curr.length === 1) {
-        // DEST CURRENCY is OK
-      setError(prev => [...prev.slice(0,1),false]);
+      // DEST CURRENCY is OK
+      setError(prev => [...prev.slice(0, 1), false]);
     } else {
-      setError(prev => [...prev.slice(0,1),true]);
+      setError(prev => [...prev.slice(0, 1), true]);
     }
   }, [destCurrency]);
 
-
   return (
-    <form onSubmit={onSubmit}>
+    <form>
       <div className="form-control">
         <label htmlFor="source-currency">Source currency</label>
         <input
@@ -62,7 +92,6 @@ export const Converter = ({ setResult }) => {
           step=".01"
           value={amount}
           onChange={e => setAmount(e.target.value)}
-
         />
       </div>
       <div className="form-control">
@@ -72,17 +101,17 @@ export const Converter = ({ setResult }) => {
           onChange={e => setDestCurrency(e.target.value)}
           list="currencies"
           className={error[1] ? "red" : "green"}
-
         />
       </div>
-
-      <datalist id="currencies">
-        <option value="EUR" />
-        <option value="USD" />
-        <option value="CZK" />
-        <option value="GBP" />
-      </datalist>
-      <button type="submit">Convert</button>
+      {allCurrencies.length > 0 && (
+        <datalist id="currencies">
+            {
+                allCurrencies.map(curr => (
+                    <option value={curr} />
+                ))
+            }
+        </datalist>
+      )}
     </form>
   );
 };
