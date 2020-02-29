@@ -14,9 +14,9 @@ export const Converter = ({ setResult, loading, setLoading }) => {
 
   useEffect(() => {
     // if there is no error in input and we have rates, convert
-    if (error.every(x => !x) && !isNaN(amount) && rates) {
+    if (error.every(x => !x) && !isNaN(amount) && amount >= 0 && rates) {
       setResult(currencyToString(amount * rates[destCurrency], destCurrency));
-    } else {        
+    } else {
       setResult(0);
     }
   }, [error, amount, rates]);
@@ -31,7 +31,7 @@ export const Converter = ({ setResult, loading, setLoading }) => {
       setAllCurrencies([res.data.base, ...Object.keys(res.data.rates)]);
       setSrcCurrency("EUR");
       setDestCurrency("USD");
-      setTimeout(() => setLoading(false),500)
+      setTimeout(() => setLoading(false), 500);
     };
     fetchData();
   }, []);
@@ -45,7 +45,7 @@ export const Converter = ({ setResult, loading, setLoading }) => {
     const fetchCurrency = async curr => {
       setLoading(true);
       const res = await axios.get(`${BASE_URL}?base=${curr}`);
-      setTimeout(() => setLoading(false),500)
+      setTimeout(() => setLoading(false), 500);
       setRates(res.data.rates);
     };
 
@@ -87,12 +87,17 @@ export const Converter = ({ setResult, loading, setLoading }) => {
       </div>
       <div className="form-control">
         <label htmlFor="amount">Amount</label>
-        <input
-          type="number"
-          step=".01"
-          value={amount}
-          onChange={e => setAmount(e.target.value)}
-        />
+        <div className="amount-group">
+          <div className="arrow" onClick={() => setAmount(parseFloat(amount) + 1.0)}>+</div>
+          <input
+            type="number"
+            step="any"
+            value={amount}
+            onChange={e => setAmount(e.target.value)}
+            min="0"
+          />
+          <div className="arrow" onClick={() => setAmount(parseFloat(amount) - 1.0)}>-</div>
+        </div>
       </div>
       <div className="form-control">
         <label htmlFor="dest-currency">Destination currency</label>
@@ -105,11 +110,9 @@ export const Converter = ({ setResult, loading, setLoading }) => {
       </div>
       {allCurrencies.length > 0 && (
         <datalist id="currencies">
-            {
-                allCurrencies.map(curr => (
-                    <option key={curr} value={curr} />
-                ))
-            }
+          {allCurrencies.map(curr => (
+            <option key={curr} value={curr} />
+          ))}
         </datalist>
       )}
     </form>
