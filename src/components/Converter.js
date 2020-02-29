@@ -45,7 +45,7 @@ export const Converter = ({ setResult, loading, setLoading }) => {
     const fetchCurrency = async curr => {
       setLoading(true);
       const res = await axios.get(`${BASE_URL}?base=${curr}`);
-      setTimeout(() => setLoading(false), 500);
+      setTimeout(() => setLoading(false), 300);
       setRates(res.data.rates);
     };
 
@@ -80,7 +80,7 @@ export const Converter = ({ setResult, loading, setLoading }) => {
         <label htmlFor="source-currency">Source currency</label>
         <input
           value={srcCurrency}
-          onChange={e => setSrcCurrency(e.target.value)}
+          onChange={e => setSrcCurrency(e.target.value.toUpperCase())}
           list="currencies"
           className={error[0] ? "red" : "green"}
         />
@@ -103,7 +103,7 @@ export const Converter = ({ setResult, loading, setLoading }) => {
         <label htmlFor="dest-currency">Destination currency</label>
         <input
           value={destCurrency}
-          onChange={e => setDestCurrency(e.target.value)}
+          onChange={e => setDestCurrency(e.target.value.toUpperCase())}
           list="currencies"
           className={error[1] ? "red" : "green"}
         />
